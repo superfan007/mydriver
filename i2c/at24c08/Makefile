@@ -22,7 +22,7 @@ obj-m += i2c_ralink_at24c08.o
 ##################user moudel #################################
 
 #compile and lib parameter
-export TARGET  := app-ioctl
+export TARGET  := i2c-test
 export LIBS    := -L$(TOPDIR)/target-mipsel_24kec+dsp_uClibc-0.9.33.2
 export LDFLAGS :=
 #export DEFINES := -lubox -luci
