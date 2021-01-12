@@ -27,10 +27,10 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	fd = open("/dev/at24cxx", O_RDWR);
+	fd = open("/dev/at24c08", O_RDWR);
 	if (fd < 0)
 	{
-		printf("can't open /dev/at24cxx\n");
+		printf("can't open /dev/at24c08\n");
 		return -1;
 	}
 
