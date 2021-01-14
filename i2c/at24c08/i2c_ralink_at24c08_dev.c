@@ -6,30 +6,53 @@
 #include <linux/regmap.h>
 #include <linux/slab.h>
 
+static struct i2c_client *at24cxx_client;
 
-static struct i2c_board_info at24c08_info = {	
-	I2C_BOARD_INFO("at24c08", 0x50),
-};
+static const unsigned short addr_list[] = { 0x60, 0x50, I2C_CLIENT_END };
 
-static struct i2c_client *at24c08_client;
-
-static int at24c08_dev_init(void)
+static int at24cxx_dev_init(void)
 {
-	struct i2c_adapter *i2c_adap;
+	struct i2c_adapter *i2c_adap = NULL;
+	struct i2c_board_info at24cxx_info;
+	int i=0,flag=0;
+	memset(&at24cxx_info, 0, sizeof(struct i2c_board_info));	
+	strlcpy(at24cxx_info.type, "at24c08", I2C_NAME_SIZE);
 
-	i2c_adap = i2c_get_adapter(0);
-	at24c08_client = i2c_new_device(i2c_adap, &at24c08_info);
+	for(; i<5; i++)
+	{
+		i2c_adap = i2c_get_adapter(i);
+		if(i2c_adap != NULL)
+		{
+			printk("get adapter ok!\n");	
+			flag = 1;
+			break;
+		}
+		else
+			printk("get adapter(%d) error\n", i);		
+	}
+
+	if(flag == 0)
+	{
+		printk("get adapter filed\n");
+		return -1;
+	}
+	at24cxx_client = i2c_new_probed_device(i2c_adap, &at24cxx_info, addr_list, NULL);
 	i2c_put_adapter(i2c_adap);
-	
-	return 0;
+
+	if (at24cxx_client)
+		return 0;
+	else
+		return -ENODEV;
 }
 
-static void at24c08_dev_exit(void)
+static void at24cxx_dev_exit(void)
 {
-	i2c_unregister_device(at24c08_client);
+	i2c_unregister_device(at24cxx_client);
 }
 
 
-module_init(at24c08_dev_init);
-module_exit(at24c08_dev_exit);
+module_init(at24cxx_dev_init);
+module_exit(at24cxx_dev_exit);
 MODULE_LICENSE("GPL");
+
+
