@@ -1,16 +1,16 @@
-KERNELDIR := /home/gongfan/extern/linux-4.4.198
+KERNELDIR := /home/hlk/mtkopenwrt/linux-3.10.14
 
-TOPDIR  := /home/gongfan/extern/mywork/MTK-WiFi6/mtk-openwrt-lede-4.2.0.0/staging_dir
+TOPDIR  := /home/hlk/mtkopenwrt/staging_dir
 ARCH = mips
-CROSS_COMPILE = $(TOPDIR)/toolchain-mipsel_24kc_gcc-5.4.0_musl-1.1.16/bin/mipsel-openwrt-linux-
+CROSS_COMPILE = $(TOPDIR)/toolchain-mipsel_24kec+dsp_gcc-4.8-linaro_uClibc-0.9.33.2/bin/mipsel-openwrt-linux-uclibc-
 DEBUG = y 
-export CC      := $(CROSS_COMPILE)gcc
-export LD      := $(CROSS_COMPILE)ld
+export CC      := $(TOPDIR)/toolchain-mipsel_24kec+dsp_gcc-4.8-linaro_uClibc-0.9.33.2/bin/mipsel-openwrt-linux-uclibc-gcc
+export LD      := $(TOPDIR)/toolchain-mipsel_24kec+dsp_gcc-4.8-linaro_uClibc-0.9.33.2/bin/mipsel-openwrt-linux-uclibc-ld
 ###################kernel moudel###################################
 
 ccflags-y += $(MODULE_FLAGS) -Inet/nat
 
-MODULE_NAME=app_memdev
+#MODULE_NAME=app_memdev
 
 #OBJS:= k_proc.o
 #OBJS+= k_uilt.o
@@ -24,7 +24,7 @@ obj-m += i2c_mt7621.o
 
 #compile and lib parameter
 export TARGET  := i2c-test
-export LIBS    := -L$(TOPDIR)/target-mipsel_24kc_musl-1.1.16
+export LIBS    := -L$(TOPDIR)/target-mipsel_24kec+dsp_uClibc-0.9.33.2
 export LDFLAGS :=
 #export DEFINES := -lubox -luci
 #export INCLUDE := -I$(TOPDIR)/target-mipsel_24kc_musl-1.1.16/usr/include
@@ -39,14 +39,9 @@ else
 endif 
 ###################### build ##########################
 
-
-
 all: modules app
 
-
 modules:
-	echo $(CC)
-	echo $(LD)
 	$(MAKE) -C $(KERNELDIR)  M=$(shell pwd) modules ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE)
 	rm -f *.o *.mod.o *.mod.c *.symvers  modul* 
 
