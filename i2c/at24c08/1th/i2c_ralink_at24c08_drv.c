@@ -95,10 +95,9 @@ static int at24c08_drv_init(void)
 	return 0;
 }
 
-static int at24c08_drv_exit(void)
+static void at24c08_drv_exit(void)
 {
 	i2c_del_driver(&at24c08_driver);
-	return 0;
 }
 
 module_init(at24c08_drv_init);
